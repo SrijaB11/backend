@@ -1,7 +1,6 @@
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
-// REGISTER
 exports.register = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -14,7 +13,7 @@ exports.register = async (req, res) => {
     await User.create({
       name,
       email,
-      password, // plain password (learning purpose)
+      password,
       role: role || "student",
     });
 
@@ -25,7 +24,6 @@ exports.register = async (req, res) => {
   }
 };
 
-// LOGIN
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -35,17 +33,13 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // 🔥 SIMPLE PASSWORD CHECK (NO BCRYPT)
     if (user.password !== password) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // 🔥 JWT SECRET (REQUIRED)
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      "mysecretkey", // simple secret for now
-      { expiresIn: "1d" },
-    );
+    const token = jwt.sign({ id: user._id, role: user.role }, "mysecretkey", {
+      expiresIn: "1d",
+    });
 
     res.json({
       token,
