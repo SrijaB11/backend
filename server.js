@@ -11,6 +11,9 @@ app.use(express.json());
 connectDB();
 
 app.use("/api/auth", authRoutes);
+app.get("/", (req, res) => {
+  res.send("Server is running ");
+});
 
 app.listen(5000, () => {
   console.log("Server running");
